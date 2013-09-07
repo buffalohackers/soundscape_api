@@ -12,10 +12,6 @@ type Api struct {
 	MongoSession *mgo.Session
 }
 
-func (self *Api) GetSongs(w rest.ResponseWriter, r *rest.Request) {
-
-}
-
 func main() {
 
 	session, err := mgo.Dial("localhost")
@@ -28,7 +24,7 @@ func main() {
 	handler.SetRoutes(
 		rest.RouteObjectMethod("GET", "/sessions", &api, "GetSessions"),
 		rest.RouteObjectMethod("POST", "/songs", &api, "PostSongs"),
-		rest.RouteObjectMethod("GET", "/songs", &api, "GetSongs"),
+		rest.RouteObjectMethod("POST", "/closestSong", &api, "GetSongs"),
 	)
 
 	hostname, port := "127.0.0.1", "8080"

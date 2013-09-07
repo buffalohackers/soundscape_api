@@ -5,14 +5,15 @@ import (
 	"fmt"
 	"github.com/nickdirienzo/go-json-rest"
 	"io"
+	"labix.org/v2/mgo/bson"
 	"log"
 	"net/http"
 	"time"
 )
 
 type session struct {
-	SessionKey  string   `bson:"session_key"`
-	SongsPlayed []string `bson:"songs_played"`
+	SessionKey  string   `bson:"session_key" json:"session_key"`
+	SongsPlayed []string `bson:"songs_played" json:"songs_played"`
 }
 
 func (self *Api) GetSessions(w *rest.ResponseWriter, r *rest.Request) {
@@ -28,6 +29,14 @@ func (self *Api) GetSessions(w *rest.ResponseWriter, r *rest.Request) {
 		log.Println(err.Error())
 		rest.Error(w, err.Error(), http.StatusInternalServerError, "sessions.get")
 	}
-
 	w.WriteJson(&session, http.StatusOK)
+}
+
+func (self *Api) updateSessionSongs(query ClosestSongQuery, song SortedSong) error {
+	var s session
+	sessions := self.MongoSession.DB(self.DbName).C("sessions")
+	sessions.Find(bson.M{"session_key": query.SessionKey}).One(&s)
+	s.SongsPlayed = append(s.SongsPlayed, song.Id)
+	err := sessions.Update(bson.M{"session_key": query.SessionKey}, &s)
+	return err
 }
