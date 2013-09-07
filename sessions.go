@@ -1,24 +1,36 @@
 package main
 
 import (
+	"github.com/nickdirienzo/go-json-rest"
+	// "labix.org/v2/mgo"
 	"crypto/md5"
-	"github.com/nickdirienzo/go-rest-json"
-	"labix.org/v2/mgo"
+	"io"
+	"log"
 	"net/http"
+	"time"
+	"fmt"
 )
 
 type session struct {
-	SessionKey  string
-	SongsPlayed []string
+	SessionKey  string   `bson:"session_key"`
+	SongsPlayed []string `bson:"songs_played"`
 }
 
-func (self *Api) GetSession(w *rest.ResponseWriter, r *rest.Request) {
-	ip := r.Headers.Get("Remote_Addr")
-	log.Println(ip)
+func (self *Api) GetSessions(w *rest.ResponseWriter, r *rest.Request) {
+	d := r.RemoteAddr + time.Now().String()
+	h := md5.New()
+	io.WriteString(h, d)
+	hash := fmt.Sprintf("%x", h.Sum(nil))
 
-	session := session{}
-	k := self.Db(self.DbName).C("session-keys")
+	session := session{SessionKey: hash}
+	k := self.Db.DB(self.DbName).C("session-keys")
 	err := k.Insert(&session)
+	if err != nil {
+		log.Println(err.Error())
+		rest.Error(w, err.Error(), http.StatusInternalServerError, "get.sessions")
+	}
 
-	return fmt.Fprintln("FUCK")
+	response := Response{}
+	response["data"] = "Bullshit"
+	w.WriteJson(&response, http.StatusOK)
 }
