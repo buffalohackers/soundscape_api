@@ -12,7 +12,7 @@ import (
 
 const (
 	month          = 60 * 60 * 24 * 30
-	hackersBaseUrl = "http://localhost:8080/%s"
+	hackersBaseUrl = "http://buffalohackers.com/%s"
 )
 
 type Redirect struct {
