@@ -3,15 +3,34 @@ package main
 import (
 	"github.com/nickdirienzo/go-json-rest"
 	"labix.org/v2/mgo"
+	"log"
+	"net/http"
 )
 
-type api struct {
-	db *Session
+type Api struct {
+	DbName string
+	Db     *mgo.Session
+}
+
+func (self *Api) GetSessions(w rest.ResponseWriter, r *rest.Request) {
+
+}
+
+func (self *Api) PostSongs(w rest.ResponseWriter, r *rest.Request) {
+
+}
+
+func (self *Api) GetSongs(w rest.ResponseWriter, r *rest.Request) {
+
 }
 
 func main() {
 
-	session, err := mgo.Dial(url)
+	session, err := mgo.Dial("localhost")
+	if err != nil {
+		log.Fatal("Could not get Mongo")
+	}
+	api := Api{Db: session, DbName: "mugo"}
 
 	handler := rest.ResourceHandler{}
 	handler.SetRoutes(
