@@ -130,3 +130,11 @@ func (self *Api) GetSongs(w *rest.ResponseWriter, r *rest.Request) {
 	}
 	w.WriteJson(&closestSong, http.StatusOK)
 }
+
+func (self *Api) GetAllSongs(w *rest.ResponseWriter, r *rest.Request) {
+	songCollection := self.MongoSession.DB(self.DbName).C("songs")
+	var songs []Song
+	_ = songCollection.Find(nil).All(&songs)
+	log.Println(songs)
+	w.WriteJson(&songs, http.StatusOK)
+}

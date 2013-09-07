@@ -29,6 +29,8 @@ func main() {
 		rest.RouteObjectMethod("GET", "/login", &api, "LogIn"),
 		rest.RouteObjectMethod("GET", "/rdio", &api, "RdioCallback"),
 		rest.RouteObjectMethod("GET", "/playbackToken", &api, "GetPlaybackToken"),
+		rest.RouteObjectMethod("GET", "/search", &api, "SearchRdio"),
+		rest.RouteObjectMethod("GET", "/allSongs", &api, "GetAllSongs"),
 	)
 
 	hostname, port := "127.0.0.1", "8080"

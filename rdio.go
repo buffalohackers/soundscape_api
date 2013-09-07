@@ -126,3 +126,25 @@ func (self *Api) GetPlaybackToken(w *rest.ResponseWriter, r *rest.Request) {
 	}
 	w.WriteJson(&ret, http.StatusOK)
 }
+
+func (self *Api) SearchRdio(w *rest.ResponseWriter, r *rest.Request) {
+	at := getCookie(r, "at")
+	ats := getCookie(r, "ats")
+	if at == nil || ats == nil {
+		log.Println("at or ats not found.")
+		rest.Error(w, "Could not authenticate with Rdio.", http.StatusBadRequest, "search.get")
+		return
+	}
+	q := r.URL.Query().Get("q")
+	rdio := authedRdioClient(at.Value, ats.Value)
+	query := make(map[string]string)
+	query["query"] = q
+	query["types"] = "Artist,Album,Track"
+	ret, err := rdio.Call("search", query)
+	if err != nil {
+		log.Println("Rdio Call Fail:", err.Error())
+		rest.Error(w, "Rdio Call Failed", http.StatusBadRequest, "search.get")
+		return
+	}
+	w.WriteJson(&ret, http.StatusOK)
+}
