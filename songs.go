@@ -11,10 +11,11 @@ import (
 )
 
 type Song struct {
-	Id    string  `bson:"id" json:"id"`
-	Lat   float64 `bson:"lat" json:"lat"`
-	Long  float64 `bson:"long" json:"long"`
-	Genre string  `bson:"genre" json:"genre"`
+	SessionKey string  `bson:"session_key" json:"session_key"`
+	Id         string  `bson:"id" json:"id"`
+	Lat        float64 `bson:"lat" json:"lat"`
+	Long       float64 `bson:"long" json:"long"`
+	Genre      string  `bson:"genre" json:"genre"`
 }
 
 type SortedSong struct {
@@ -63,6 +64,12 @@ func (self *Api) PostSongs(w *rest.ResponseWriter, r *rest.Request) {
 	if err != nil {
 		log.Println("Could not insert song:", err.Error())
 		rest.Error(w, "Could not process song", http.StatusInternalServerError, method)
+		return
+	}
+	err = self.updateSessionSongs(song.SessionKey, song.Id)
+	if err != nil {
+		log.Println(err.Error())
+		rest.Error(w, err.Error(), http.StatusBadRequest, method)
 		return
 	}
 	resp := SongResponse{Success: true}
@@ -124,7 +131,7 @@ func (self *Api) GetSongs(w *rest.ResponseWriter, r *rest.Request) {
 	genre := query.Get("genre")
 	req := ClosestSongQuery{SessionKey: sessionKey, Lat: lat, Long: long, Genre: genre}
 	closestSong := self.getClosestSong(req)
-	err = self.updateSessionSongs(req, closestSong)
+	err = self.updateSessionSongs(req.SessionKey, closestSong.Id)
 	if err != nil {
 		log.Println(err.Error())
 		rest.Error(w, err.Error(), http.StatusBadRequest, method)

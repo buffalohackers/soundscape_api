@@ -32,11 +32,11 @@ func (self *Api) GetSessions(w *rest.ResponseWriter, r *rest.Request) {
 	w.WriteJson(&session, http.StatusOK)
 }
 
-func (self *Api) updateSessionSongs(query ClosestSongQuery, song SortedSong) error {
+func (self *Api) updateSessionSongs(sessionKey, songId string) error {
 	var s Session
 	sessions := self.MongoSession.DB(self.DbName).C("sessions")
-	sessions.Find(bson.M{"session_key": query.SessionKey}).One(&s)
-	s.SongsPlayed[song.Id] = true
-	err := sessions.Update(bson.M{"session_key": query.SessionKey}, &s)
+	sessions.Find(bson.M{"session_key": sessionKey}).One(&s)
+	s.SongsPlayed[songId] = true
+	err := sessions.Update(bson.M{"session_key": sessionKey}, &s)
 	return err
 }
