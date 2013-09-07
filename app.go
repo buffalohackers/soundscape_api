@@ -26,6 +26,7 @@ func main() {
 		rest.RouteObjectMethod("POST", "/songs", &api, "PostSongs"),
 		rest.RouteObjectMethod("GET", "/songs", &api, "GetSongs"),
 		rest.RouteObjectMethod("GET", "/map", &api, "GMapsMirror"),
+		rest.RouteObjectMethod("GET", "/mockPins", &api, "GenerateMockPins"),
 	)
 
 	hostname, port := "127.0.0.1", "8080"
