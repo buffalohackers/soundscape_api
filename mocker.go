@@ -16,14 +16,8 @@ type MockPin struct {
 var genres = []string{"rock", "pop", "rap", "country", "dubstep", "electro house"}
 
 func GenerateMockPin() MockPin {
-	lat := rand.Float64() * 90
-	if rand.Intn(2) == 0 {
-		lat = lat * -1
-	}
-	long := rand.Float64() * 180
-	if rand.Intn(2) == 0 {
-		long = long * -1
-	}
+	lat := (rand.Float64() * 25) + 24.52
+	long := (rand.Float64() * 57) + 66.95
 	genre := genres[rand.Intn(len(genres))]
 	return MockPin{Lat: lat, Long: long, Genre: genre}
 }
