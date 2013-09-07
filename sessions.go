@@ -23,14 +23,12 @@ func (self *Api) GetSessions(w *rest.ResponseWriter, r *rest.Request) {
 	hash := fmt.Sprintf("%x", h.Sum(nil))
 
 	session := session{SessionKey: hash}
-	k := self.Db.DB(self.DbName).C("session-keys")
+	k := self.MongoSession.DB(self.DbName).C("sessions")
 	err := k.Insert(&session)
 	if err != nil {
 		log.Println(err.Error())
 		rest.Error(w, err.Error(), http.StatusInternalServerError, "get.sessions")
 	}
 
-	response := Response{}
-	response["data"] = "Bullshit"
-	w.WriteJson(&response, http.StatusOK)
+	w.WriteJson(&session, http.StatusOK)
 }
