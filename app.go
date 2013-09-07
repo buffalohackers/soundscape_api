@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/nickdirienzo/go-json-rest"
-	"labix.org/v2/mongo"
+	"labix.org/v2/mgo"
 )
 
 type api struct {
