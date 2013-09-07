@@ -110,13 +110,13 @@ func (self *Api) GetSongs(w *rest.ResponseWriter, r *rest.Request) {
 	lat, err := strconv.ParseFloat(query.Get("lat"), 64)
 	if err != nil {
 		log.Println(err.Error())
-		rest.Error(w, err.Error(), http.StatusBadRequest)
+		rest.Error(w, err.Error(), http.StatusBadRequest, method)
 		return
 	}
 	long, err := strconv.ParseFloat(query.Get("long"), 64)
 	if err != nil {
 		log.Println(err.Error())
-		rest.Error(w, err.Error(), http.StatusBadRequest)
+		rest.Error(w, err.Error(), http.StatusBadRequest, method)
 		return
 	}
 	genre := query.Get("genre")
@@ -125,7 +125,7 @@ func (self *Api) GetSongs(w *rest.ResponseWriter, r *rest.Request) {
 	err = self.updateSessionSongs(req, closestSong)
 	if err != nil {
 		log.Println(err.Error())
-		rest.Error(w, err.Error(), http.StatusBadRequest)
+		rest.Error(w, err.Error(), http.StatusBadRequest, method)
 		return
 	}
 	w.WriteJson(&closestSong, http.StatusOK)
