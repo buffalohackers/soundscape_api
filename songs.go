@@ -76,6 +76,18 @@ func calculateDistances(query ClosestSongQuery, songs []Song) SortedSongs {
 	return sortedSongs
 }
 
+func (self *Api) getUnlistenedSong(query ClosestSongQuery, songs SortedSongs) SortedSong {
+	var session Session
+	sessions := self.MongoSession.DB(self.DbName).C("sessions")
+	sessions.Find(bson.M{"session_key": query.SessionKey}).One(&session)
+	for _, song := range songs {
+		if !session.SongsPlayed[song.Id] {
+			return song
+		}
+	}
+	return songs[0]
+}
+
 func (self *Api) getClosestSong(query ClosestSongQuery) SortedSong {
 	songs := []Song{}
 	songCollection := self.MongoSession.DB(self.DbName).C("songs")
@@ -86,7 +98,8 @@ func (self *Api) getClosestSong(query ClosestSongQuery) SortedSong {
 	}
 	sortedSongs := calculateDistances(query, songs)
 	sort.Sort(sortedSongs)
-	return sortedSongs[0]
+	sortedSong := self.getUnlistenedSong(query, sortedSongs)
+	return sortedSong
 }
 
 func (self *Api) GetSongs(w *rest.ResponseWriter, r *rest.Request) {

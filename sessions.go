@@ -11,9 +11,9 @@ import (
 	"time"
 )
 
-type session struct {
-	SessionKey  string   `bson:"session_key" json:"session_key"`
-	SongsPlayed []string `bson:"songs_played" json:"songs_played"`
+type Session struct {
+	SessionKey  string          `bson:"session_key" json:"session_key"`
+	SongsPlayed map[string]bool `bson:"songs_played" json:"songs_played"`
 }
 
 func (self *Api) GetSessions(w *rest.ResponseWriter, r *rest.Request) {
@@ -22,7 +22,7 @@ func (self *Api) GetSessions(w *rest.ResponseWriter, r *rest.Request) {
 	io.WriteString(h, d)
 	hash := fmt.Sprintf("%x", h.Sum(nil))
 
-	session := session{SessionKey: hash}
+	session := Session{SessionKey: hash}
 	k := self.MongoSession.DB(self.DbName).C("sessions")
 	err := k.Insert(&session)
 	if err != nil {
@@ -33,10 +33,10 @@ func (self *Api) GetSessions(w *rest.ResponseWriter, r *rest.Request) {
 }
 
 func (self *Api) updateSessionSongs(query ClosestSongQuery, song SortedSong) error {
-	var s session
+	var s Session
 	sessions := self.MongoSession.DB(self.DbName).C("sessions")
 	sessions.Find(bson.M{"session_key": query.SessionKey}).One(&s)
-	s.SongsPlayed = append(s.SongsPlayed, song.Id)
+	s.SongsPlayed[song.Id] = true
 	err := sessions.Update(bson.M{"session_key": query.SessionKey}, &s)
 	return err
 }
