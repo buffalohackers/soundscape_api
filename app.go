@@ -13,7 +13,6 @@ type Api struct {
 }
 
 func main() {
-
 	session, err := mgo.Dial("localhost")
 	if err != nil {
 		log.Fatal("Could not get Mongo")
@@ -27,6 +26,8 @@ func main() {
 		rest.RouteObjectMethod("GET", "/songs", &api, "GetSongs"),
 		rest.RouteObjectMethod("GET", "/map", &api, "GMapsMirror"),
 		rest.RouteObjectMethod("GET", "/mockPins", &api, "GenerateMockPins"),
+		rest.RouteObjectMethod("GET", "/login", &api, "LogIn"),
+		rest.RouteObjectMethod("GET", "/rdio", &api, "RdioCallback"),
 	)
 
 	hostname, port := "127.0.0.1", "8080"
