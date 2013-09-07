@@ -8,15 +8,11 @@ import (
 )
 
 type Api struct {
-	DbName string
-	Db     *mgo.Session
+	DbName       string
+	MongoSession *mgo.Session
 }
 
 func (self *Api) GetSessions(w rest.ResponseWriter, r *rest.Request) {
-
-}
-
-func (self *Api) PostSongs(w rest.ResponseWriter, r *rest.Request) {
 
 }
 
@@ -30,7 +26,7 @@ func main() {
 	if err != nil {
 		log.Fatal("Could not get Mongo")
 	}
-	api := Api{Db: session, DbName: "mugo"}
+	api := Api{MongoSession: session, DbName: "mugo"}
 
 	handler := rest.ResourceHandler{}
 	handler.SetRoutes(
