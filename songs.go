@@ -20,6 +20,8 @@ type Song struct {
 type SortedSong struct {
 	Id   string  `bson:"id" json:"id"`
 	Dist float64 `bson:"dist" json:"dist"`
+	Lat  float64 `bson:"lat" json:"lat"`
+	Long float64 `bson:"long" json:"long"`
 }
 
 type SortedSongs []SortedSong
@@ -71,7 +73,7 @@ func calculateDistances(query ClosestSongQuery, songs []Song) SortedSongs {
 	var sortedSongs SortedSongs
 	for _, s := range songs {
 		dist := math.Sqrt(math.Pow(query.Lat-s.Lat, 2) + math.Pow(query.Long-s.Long, 2))
-		sortedSong := SortedSong{Id: s.Id, Dist: dist}
+		sortedSong := SortedSong{Id: s.Id, Dist: dist, Long: s.Long, Lat: s.Lat}
 		sortedSongs = append(sortedSongs, sortedSong)
 	}
 	return sortedSongs
