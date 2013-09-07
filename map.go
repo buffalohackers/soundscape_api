@@ -16,5 +16,6 @@ func (self *Api) GMapsMirror(w *rest.ResponseWriter, r *rest.Request) {
 	location := q.Get("location")
 	resp, _ := http.Get(fmt.Sprintf(baseUrl, input, location))
 	body, _ := ioutil.ReadAll(resp.Body)
+	r.Header.Set("Content-Type", "application/json")
 	w.Write(body)
 }

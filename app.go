@@ -24,7 +24,7 @@ func main() {
 	handler.SetRoutes(
 		rest.RouteObjectMethod("GET", "/sessions", &api, "GetSessions"),
 		rest.RouteObjectMethod("POST", "/songs", &api, "PostSongs"),
-		rest.RouteObjectMethod("POST", "/closestSong", &api, "GetSongs"),
+		rest.RouteObjectMethod("GET", "/songs", &api, "GetSongs"),
 		rest.RouteObjectMethod("GET", "/map", &api, "GMapsMirror"),
 	)
 

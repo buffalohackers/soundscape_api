@@ -7,6 +7,7 @@ import (
 	"math"
 	"net/http"
 	"sort"
+	"strconv"
 )
 
 type Song struct {
@@ -104,14 +105,28 @@ func (self *Api) getClosestSong(query ClosestSongQuery) SortedSong {
 
 func (self *Api) GetSongs(w *rest.ResponseWriter, r *rest.Request) {
 	method := "songs.get"
-	req := ClosestSongQuery{}
-	err := r.DecodeJsonPayload(&req)
+	query := r.URL.Query()
+	sessionKey := query.Get("session_key")
+	lat, err := strconv.ParseFloat(query.Get("lat"), 64)
 	if err != nil {
-		log.Println("Could not decode request:", err.Error())
-		rest.Error(w, "Could not process songs.get request", http.StatusBadRequest, method)
+		log.Println(err.Error())
+		rest.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+	long, err := strconv.ParseFloat(query.Get("long"), 64)
+	if err != nil {
+		log.Println(err.Error())
+		rest.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	genre := query.Get("genre")
+	req := ClosestSongQuery{SessionKey: sessionKey, Lat: lat, Long: long, Genre: genre}
 	closestSong := self.getClosestSong(req)
-	_ = self.updateSessionSongs(req, closestSong)
+	err = self.updateSessionSongs(req, closestSong)
+	if err != nil {
+		log.Println(err.Error())
+		rest.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 	w.WriteJson(&closestSong, http.StatusOK)
 }
