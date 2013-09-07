@@ -1,14 +1,13 @@
 package main
 
 import (
-	"github.com/nickdirienzo/go-json-rest"
-	// "labix.org/v2/mgo"
 	"crypto/md5"
+	"fmt"
+	"github.com/nickdirienzo/go-json-rest"
 	"io"
 	"log"
 	"net/http"
 	"time"
-	"fmt"
 )
 
 type session struct {
@@ -27,7 +26,7 @@ func (self *Api) GetSessions(w *rest.ResponseWriter, r *rest.Request) {
 	err := k.Insert(&session)
 	if err != nil {
 		log.Println(err.Error())
-		rest.Error(w, err.Error(), http.StatusInternalServerError, "get.sessions")
+		rest.Error(w, err.Error(), http.StatusInternalServerError, "sessions.get")
 	}
 
 	w.WriteJson(&session, http.StatusOK)
