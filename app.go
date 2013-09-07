@@ -12,10 +12,6 @@ type Api struct {
 	Db     *mgo.Session
 }
 
-func (self *Api) GetSessions(w rest.ResponseWriter, r *rest.Request) {
-
-}
-
 func (self *Api) PostSongs(w rest.ResponseWriter, r *rest.Request) {
 
 }
