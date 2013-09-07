@@ -28,6 +28,7 @@ func main() {
 		rest.RouteObjectMethod("GET", "/mockPins", &api, "GenerateMockPins"),
 		rest.RouteObjectMethod("GET", "/login", &api, "LogIn"),
 		rest.RouteObjectMethod("GET", "/rdio", &api, "RdioCallback"),
+		rest.RouteObjectMethod("GET", "/playbackToken", &api, "GetPlaybackToken"),
 	)
 
 	hostname, port := "127.0.0.1", "8080"

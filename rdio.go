@@ -32,6 +32,10 @@ func newRdioClient() rdigo.Rdio {
 	return rdigo.NewClient(os.Getenv("RDIOTOKEN"), os.Getenv("RDIOSECRET"))
 }
 
+func authedRdioClient(at, ats string) rdigo.Rdio {
+	return rdigo.AuthenticatedClient(os.Getenv("RDIOTOKEN"), os.Getenv("RDIOSECRET"), at, ats)
+}
+
 func (self *Api) LogIn(w *rest.ResponseWriter, r *rest.Request) {
 	http.SetCookie(w, &http.Cookie{
 		Name:  "at",
@@ -101,4 +105,24 @@ func (self *Api) RdioCallback(w *rest.ResponseWriter, r *rest.Request) {
 		Value: "",
 	})
 	w.WriteJson(&Redirect{See: fmt.Sprintf(hackersBaseUrl, "gpsongs/")}, http.StatusTemporaryRedirect)
+}
+
+func (self *Api) GetPlaybackToken(w *rest.ResponseWriter, r *rest.Request) {
+	at := getCookie(r, "at")
+	ats := getCookie(r, "ats")
+	if at == nil || ats == nil {
+		log.Println("at or ats not found.")
+		rest.Error(w, "Could not authenticate with Rdio.", http.StatusBadRequest, "playbackToken.get")
+		return
+	}
+	rdio := authedRdioClient(at.Value, ats.Value)
+	query := make(map[string]string)
+	query["domain"] = "buffalohackers.com"
+	ret, err := rdio.Call("getPlaybackToken", query)
+	if err != nil {
+		log.Println("Rdio Call Fail:", err.Error())
+		rest.Error(w, "Rdio Call Failed", http.StatusBadRequest, "playbackToken.get")
+		return
+	}
+	w.WriteJson(&ret, http.StatusOK)
 }
