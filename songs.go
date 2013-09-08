@@ -16,7 +16,7 @@ type Song struct {
 	Url        string  `bson:"url" json:"url"`
 	Artist     string  `bson:"artist" json:"artist"`
 	SongName   string  `bson:"song" json:"song"`
-	Id         string  `bson:"song_id" json:"song_id"`
+	Id         string  `bson:"id" json:"id"`
 	Lat        float64 `bson:"lat" json:"lat"`
 	Long       float64 `bson:"long" json:"long"`
 	Genre      string  `bson:"genre" json:"genre"`
@@ -28,7 +28,7 @@ func (s *Song) String() string {
 }
 
 type SortedSong struct {
-	Id   string  `bson:"song_id" json:"song_id"`
+	Id   string  `bson:"id" json:"id"`
 	Dist float64 `bson:"dist" json:"dist"`
 	Lat  float64 `bson:"lat" json:"lat"`
 	Long float64 `bson:"long" json:"long"`
