@@ -12,7 +12,7 @@ import (
 
 const (
 	month          = 60 * 60 * 24 * 30
-	hackersBaseUrl = "http://buffalohackers.com/%s"
+	hackersBaseUrl = "http://localhost:8080/%s"
 )
 
 type Redirect struct {
@@ -104,7 +104,27 @@ func (self *Api) RdioCallback(w *rest.ResponseWriter, r *rest.Request) {
 		Name:  "rts",
 		Value: "",
 	})
-	w.WriteJson(&Redirect{See: fmt.Sprintf(hackersBaseUrl, "gpsongs/")}, http.StatusTemporaryRedirect)
+	req := http.Request{
+		Method:           r.Method,
+		URL:              r.URL,
+		Proto:            r.Proto,
+		ProtoMajor:       r.ProtoMajor,
+		ProtoMinor:       r.ProtoMinor,
+		Header:           r.Header,
+		Body:             r.Body,
+		ContentLength:    r.ContentLength,
+		TransferEncoding: r.TransferEncoding,
+		Close:            r.Close,
+		Host:             r.Host,
+		Form:             r.Form,
+		PostForm:         r.PostForm,
+		MultipartForm:    r.MultipartForm,
+		Trailer:          r.Trailer,
+		RemoteAddr:       r.RemoteAddr,
+		RequestURI:       r.RequestURI,
+		TLS:              r.TLS,
+	}
+	http.Redirect(w, &req, fmt.Sprintf(hackersBaseUrl, "gpsong/"), http.StatusTemporaryRedirect)
 }
 
 func (self *Api) GetPlaybackToken(w *rest.ResponseWriter, r *rest.Request) {
