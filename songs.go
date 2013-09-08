@@ -126,8 +126,13 @@ func (self *Api) getClosestSong(query ClosestSongQuery) SortedSong {
 	}
 	sortedSongs := calculateDistances(query, songs)
 	sort.Sort(sortedSongs)
-	sortedSong := self.getUnlistenedSong(query, sortedSongs)
-	return sortedSong
+	if len(sortedSongs) > 0 {
+		return sortedSongs[0]
+	} else {
+		return nil
+	}
+	//sortedSong := self.getUnlistenedSong(query, sortedSongs)
+	// return sortedSong
 }
 
 func (self *Api) GetSongs(w *rest.ResponseWriter, r *rest.Request) {
@@ -162,6 +167,5 @@ func (self *Api) GetAllSongs(w *rest.ResponseWriter, r *rest.Request) {
 	songCollection := self.MongoSession.DB(self.DbName).C("songs")
 	var songs []Song
 	_ = songCollection.Find(nil).All(&songs)
-	log.Println(songs)
 	w.WriteJson(&songs, http.StatusOK)
 }
