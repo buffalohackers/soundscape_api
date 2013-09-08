@@ -12,7 +12,7 @@ import (
 
 const (
 	month          = 60 * 60 * 24 * 30
-	hackersBaseUrl = "http://buffalohackers.com/%s"
+	hackersBaseUrl = "http://localhost:8080/%s"
 )
 
 type Redirect struct {
@@ -135,13 +135,10 @@ func (self *Api) SearchRdio(w *rest.ResponseWriter, r *rest.Request) {
 	}
 	q := r.URL.Query().Get("q")
 	rdio := authedRdioClient(at.Value, ats.Value)
-	query := make(map[string]string)
-	query["query"] = q
-	query["types"] = "Artist,Album,Track"
-	ret, err := rdio.Call("search", query)
+	ret, err := rdio.Search(q, "Artist,Album,Track", nil)
 	if err != nil {
-		log.Println("Rdio Call Fail:", err.Error())
-		rest.Error(w, "Rdio Call Failed", http.StatusBadRequest, "search.get")
+		log.Println("Rdio Search Fail:", err.Error())
+		rest.Error(w, "Rdio Search Failed", http.StatusBadRequest, "search.get")
 		return
 	}
 	w.WriteJson(&ret, http.StatusOK)
