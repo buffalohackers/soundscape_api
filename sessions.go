@@ -36,6 +36,9 @@ func (self *Api) updateSessionSongs(sessionKey, songId string) error {
 	var s Session
 	sessions := self.MongoSession.DB(self.DbName).C("sessions")
 	sessions.Find(bson.M{"session_key": sessionKey}).One(&s)
+	if s.SongsPlayed == nil {
+		s.SongsPlayed = make(map[string]bool)
+	}
 	s.SongsPlayed[songId] = true
 	err := sessions.Update(bson.M{"session_key": sessionKey}, &s)
 	return err
