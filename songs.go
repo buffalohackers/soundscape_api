@@ -75,7 +75,7 @@ func (self *Api) PostSongs(w *rest.ResponseWriter, r *rest.Request) {
 	err = self.updateSessionSongs(song.SessionKey, song.Id)
 	if err != nil {
 		log.Println(err.Error())
-		rest.Error(w, err.Error(), http.StatusBadRequest, method)
+		rest.Error(w, fmt.Sprintf("Could not update session songs:%s", err.Error()), http.StatusBadRequest, method)
 		return
 	}
 	resp := SongResponse{Success: true}
