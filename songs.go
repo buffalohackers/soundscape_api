@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/nickdirienzo/go-json-rest"
 	"labix.org/v2/mgo/bson"
 	"log"
@@ -16,6 +17,11 @@ type Song struct {
 	Lat        float64 `bson:"lat" json:"lat"`
 	Long       float64 `bson:"long" json:"long"`
 	Genre      string  `bson:"genre" json:"genre"`
+}
+
+func (s *Song) String() string {
+	return fmt.Sprintf("{\"id\": \"%s\", \"lat\": %s, \"long\": %s, \"genre\": \"%s\"}",
+		s.Id, strconv.FormatFloat(s.Lat, 'G', -1, 64), strconv.FormatFloat(s.Long, 'G', -1, 64), s.Genre)
 }
 
 type SortedSong struct {
@@ -73,6 +79,7 @@ func (self *Api) PostSongs(w *rest.ResponseWriter, r *rest.Request) {
 		return
 	}
 	resp := SongResponse{Success: true}
+	h.broadcast <- song.String()
 	w.WriteJson(&resp, http.StatusCreated)
 }
 
