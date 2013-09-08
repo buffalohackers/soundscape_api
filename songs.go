@@ -23,8 +23,8 @@ type Song struct {
 }
 
 func (s *Song) String() string {
-	return fmt.Sprintf("{\"id\": \"%s\", \"lat\": %s, \"long\": %s, \"genre\": \"%s\"}",
-		s.Id, strconv.FormatFloat(s.Lat, 'G', -1, 64), strconv.FormatFloat(s.Long, 'G', -1, 64), s.Genre)
+	return fmt.Sprintf("{\"id\": \"%s\", \"lat\": %s, \"long\": %s, \"genre\": \"%s\", \"url\"; \"%s\", \"artist\": \"%s\", \"song\": \"%s\"}",
+		s.Id, strconv.FormatFloat(s.Lat, 'G', -1, 64), strconv.FormatFloat(s.Long, 'G', -1, 64), s.Genre, s.Url, s.Artist, s.SongName)
 }
 
 type SortedSong struct {
