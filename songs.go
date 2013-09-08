@@ -126,13 +126,8 @@ func (self *Api) getClosestSong(query ClosestSongQuery) SortedSong {
 	}
 	sortedSongs := calculateDistances(query, songs)
 	sort.Sort(sortedSongs)
-	if len(sortedSongs) > 0 {
-		return sortedSongs[0]
-	} else {
-		return nil
-	}
-	//sortedSong := self.getUnlistenedSong(query, sortedSongs)
-	// return sortedSong
+	sortedSong := self.getUnlistenedSong(query, sortedSongs)
+	return sortedSong
 }
 
 func (self *Api) GetSongs(w *rest.ResponseWriter, r *rest.Request) {
