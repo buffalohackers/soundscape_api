@@ -12,7 +12,7 @@ import (
 
 const (
 	month          = 60 * 60 * 24 * 30
-	hackersBaseUrl = "http://buffalohackers.com/%s"
+	hackersBaseUrl = "http://localhost:8080/%s"
 )
 
 type Redirect struct {
@@ -116,9 +116,7 @@ func (self *Api) GetPlaybackToken(w *rest.ResponseWriter, r *rest.Request) {
 		return
 	}
 	rdio := authedRdioClient(at.Value, ats.Value)
-	query := make(map[string]string)
-	query["domain"] = "buffalohackers.com"
-	ret, err := rdio.Call("getPlaybackToken", query)
+	ret, err := rdio.GetPlaybackToken("buffalohackers.com")
 	if err != nil {
 		log.Println("Rdio Call Fail:", err.Error())
 		rest.Error(w, "Rdio Call Failed", http.StatusBadRequest, "playbackToken.get")
