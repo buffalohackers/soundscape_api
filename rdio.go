@@ -136,7 +136,7 @@ func (self *Api) SearchRdio(w *rest.ResponseWriter, r *rest.Request) {
 	q := r.URL.Query().Get("q")
 	rdio := authedRdioClient(at.Value, ats.Value)
 	options := make(map[string]string)
-	options["count"] = "5"
+	options["count"] = "6"
 	ret, err := rdio.Search(q, "Artist,Album,Track", options)
 	if err != nil {
 		log.Println("Rdio Search Fail:", err.Error())
