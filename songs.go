@@ -14,6 +14,7 @@ import (
 type Song struct {
 	SessionKey string  `bson:"session_key" json:"session_key"`
 	Artist     string  `bson:"artist" json:"artist"`
+	SongName   string  `bson:"song" json:"song"`
 	Id         string  `bson:"id" json:"id"`
 	Lat        float64 `bson:"lat" json:"lat"`
 	Long       float64 `bson:"long" json:"long"`
