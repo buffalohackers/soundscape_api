@@ -95,6 +95,7 @@ func (self *Api) getUnlistenedSong(query ClosestSongQuery, songs SortedSongs) So
 			return song
 		}
 	}
+	self.clearSessionSongs(query.SessionKey)
 	return songs[0]
 }
 

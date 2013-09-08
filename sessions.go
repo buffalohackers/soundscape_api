@@ -40,3 +40,12 @@ func (self *Api) updateSessionSongs(sessionKey, songId string) error {
 	err := sessions.Update(bson.M{"session_key": sessionKey}, &s)
 	return err
 }
+
+func (self *Api) clearSessionSongs(sessionKey string) error {
+	var s Session
+	sessions := self.MongoSession.DB(self.DbName).C("sessions")
+	sessions.Find(bson.M{"session_key": sessionKey}).One(&s)
+	s.SongsPlayed = make(map[string]bool)
+	err := sessions.Update(bson.M{"session_key": sessionKey}, &s)
+	return err
+}
