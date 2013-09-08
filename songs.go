@@ -13,6 +13,7 @@ import (
 
 type Song struct {
 	SessionKey string  `bson:"session_key" json:"session_key"`
+	Artist     string  `bson:"artist" json:"artist"`
 	Id         string  `bson:"id" json:"id"`
 	Lat        float64 `bson:"lat" json:"lat"`
 	Long       float64 `bson:"long" json:"long"`
@@ -65,6 +66,13 @@ func (self *Api) PostSongs(w *rest.ResponseWriter, r *rest.Request) {
 		rest.Error(w, "Could not process song", http.StatusBadRequest, method)
 		return
 	}
+	genre, err := GetArtistGenre(song.Artist)
+	if err != nil {
+		log.Println("Could not get genre:", err.Error())
+		rest.Error(w, fmt.Sprintf("Could not get genre for artist %s", song.Artist), http.StatusBadRequest, method)
+		return
+	}
+	song.Genre = genre
 	songCollection := self.MongoSession.DB(self.DbName).C("songs")
 	err = songCollection.Insert(&song)
 	if err != nil {
