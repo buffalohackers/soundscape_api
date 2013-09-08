@@ -2,6 +2,7 @@ package main
 
 import (
 	"code.google.com/p/go.net/websocket"
+	"log"
 )
 
 type connection struct {
@@ -68,9 +69,11 @@ func (h *hub) run() {
 		select {
 		case c := <-h.register:
 			h.connections[c] = true
+			log.Println("New connection:", h.connections)
 		case c := <-h.unregister:
 			delete(h.connections, c)
 			close(c.send)
+			log.Println("Closed connection:", h.connections)
 		case m := <-h.broadcast:
 			for c := range h.connections {
 				select {
