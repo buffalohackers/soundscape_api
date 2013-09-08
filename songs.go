@@ -135,13 +135,13 @@ func (self *Api) GetSongs(w *rest.ResponseWriter, r *rest.Request) {
 	sessionKey := query.Get("session_key")
 	lat, err := strconv.ParseFloat(query.Get("lat"), 64)
 	if err != nil {
-		log.Println(err.Error())
+		log.Println("Cannot parse lat:", err.Error())
 		rest.Error(w, err.Error(), http.StatusBadRequest, method)
 		return
 	}
 	long, err := strconv.ParseFloat(query.Get("long"), 64)
 	if err != nil {
-		log.Println(err.Error())
+		log.Println("Cannot parse long:", err.Error())
 		rest.Error(w, err.Error(), http.StatusBadRequest, method)
 		return
 	}
@@ -150,7 +150,7 @@ func (self *Api) GetSongs(w *rest.ResponseWriter, r *rest.Request) {
 	closestSong := self.getClosestSong(req)
 	err = self.updateSessionSongs(req.SessionKey, closestSong.Id)
 	if err != nil {
-		log.Println(err.Error())
+		log.Println("Cannot update session songs:", err.Error())
 		rest.Error(w, err.Error(), http.StatusBadRequest, method)
 		return
 	}
